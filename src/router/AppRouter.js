@@ -1,24 +1,36 @@
-import React from 'react'
-import {BrowserRouter,Switch,Route} from "react-router-dom"
-import Navbar from '../components/navbar/Navbar'
+import React, { useState } from 'react';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import Navbar from '../components/navbar/Navbar';
 import Home from '../pages/home/Home';
-import Details from '../pages/details/Details'
-import About from '../pages/about/About'
+import About from '../pages/about/About';
+import Details from '../pages/details/Details';
+import Login from '../pages/login/Login';
+import PrivateRouter from './PrivateRouter';
 
 const AppRouter = () => {
-    return (
-        <BrowserRouter>
-            <Navbar/>
+  const [isAuth, setIsAuth] = useState(false);
 
-        <Switch>
-            <Route path = "/" exact component={Home}/>
-            <Route path = "/about" component={About}/>
-            <Route path = "/details" component={Details}/>
+  const AuthContainer = () => (
+    <div>
+      <Navbar />
+      <PrivateRouter isAuth={isAuth} path="/" exact component={Home} />
+      <PrivateRouter isAuth={isAuth} path="/about" component={About} />
+      <PrivateRouter isAuth={isAuth} path="/details" component={Details} />
+    </div>
+  );
 
-        </Switch>
-            
-        </BrowserRouter>
-    )
-}
+  return (
+    <BrowserRouter>
+      <Switch>
+        <Route
+          path="/login"
+          exact
+          component={() => <Login setIsAuth={setIsAuth} />}
+        />
+        <Route component={AuthContainer} />
+      </Switch>
+    </BrowserRouter>
+  );
+};
 
-export default AppRouter
+export default AppRouter;
